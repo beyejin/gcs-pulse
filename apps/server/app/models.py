@@ -60,6 +60,30 @@ class User(Base):
     meeting_room_reservations = relationship("MeetingRoomReservation", back_populates="reserved_by")
 
 
+class AttendanceSession(Base):
+    __tablename__ = "attendance_sessions"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(120), nullable=False)
+    owner_user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    access_token = Column(String(64), nullable=False, unique=True)
+    is_open = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    closed_at = Column(DateTime(timezone=True), nullable=True)
+
+
+class AttendanceRecord(Base):
+    __tablename__ = "attendance_records"
+    __table_args__ = (
+        UniqueConstraint("session_id", "user_id", name="ux_attendance_session_user"),
+    )
+
+    id = Column(Integer, primary_key=True)
+    session_id = Column(Integer, ForeignKey("attendance_sessions.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    checked_in_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
 class Term(Base):
     __tablename__ = "terms"
 

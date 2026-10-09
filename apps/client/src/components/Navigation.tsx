@@ -11,6 +11,7 @@ import {
   CalendarClock,
   Medal,
   Building2,
+  QrCode,
   Bell,
   Menu,
   X,
@@ -29,7 +30,7 @@ import type { NotificationItem } from '@/lib/types';
 import { hasPrivilegedRole } from '@/lib/types';
 
 const navLinkClass =
-  'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground';
+  'flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground';
 const activeNavLinkClass =
   'border border-[var(--sys-current-border)] bg-[var(--sys-current-bg)] text-[var(--sys-current-fg)] shadow-sm';
 const notificationListLimit = 20;
@@ -285,6 +286,16 @@ function NavigationLinks({ className, onNavigate }: NavigationLinksProps) {
             );
           })
         : null}
+      {hasAccess && (isProfessor || user?.roles.includes('admin')) ? (
+        <Link
+          href="/professor/attendance"
+          onClick={onNavigate}
+          className={cn(className, pathname.startsWith('/professor/attendance') && activeNavLinkClass)}
+        >
+          <QrCode className="h-5 w-5" />
+          <span>출석</span>
+        </Link>
+      ) : null}
       {hasAccess && isProfessor ? (
         <>
           <Link
@@ -518,7 +529,7 @@ function MobileNavMenu({
   return (
     <div
       id="mobile-nav-menu"
-      className={cn('border-t border-border py-3 md:hidden', isOpen ? 'block' : 'hidden')}
+      className={cn('border-t border-border py-3 xl:hidden', isOpen ? 'block' : 'hidden')}
     >
       <div className="flex flex-col gap-1">
         <NavigationLinks className={navLinkClass} onNavigate={onClose} />
@@ -800,7 +811,7 @@ export function Navigation() {
               />
             </Link>
 
-            <div className="hidden items-center gap-1 md:flex">
+            <div className="hidden items-center gap-1 xl:flex">
               <NavigationLinks className={navLinkClass} />
             </div>
           </div>
@@ -809,7 +820,7 @@ export function Navigation() {
             <button
               type="button"
               onClick={() => dispatch({ type: 'toggle_mobile_nav' })}
-              className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+              className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground xl:hidden"
               aria-label="모바일 메뉴 열기"
               aria-controls="mobile-nav-menu"
               aria-expanded={isMobileNavOpen}

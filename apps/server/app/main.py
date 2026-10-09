@@ -13,6 +13,7 @@ from starlette.responses import JSONResponse
 
 from app.limiter import limiter
 from app.routers import auth, daily_snippets, snippet_utils, snippet_ai, terms, weekly_snippets, tokens, comments, teams, leaderboards, users, achievements, notifications, notifications_sse, notifications_public_sse, mcp, peer_reviews, meeting_rooms, tournaments
+from app.routers import attendance
 from app.core.config import settings
 from app.core.logging_config import configure_logging
 from app.middleware.logging_middleware import LoggingMiddleware
@@ -242,6 +243,7 @@ app.include_router(notifications_public_sse.router)
 app.include_router(mcp.router)
 app.include_router(peer_reviews.router)
 app.include_router(meeting_rooms.router)
+app.include_router(attendance.router)
 app.include_router(tournaments.router)
 
 if __name__ == "__main__":
